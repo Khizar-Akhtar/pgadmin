@@ -1,0 +1,29 @@
+apiVersion: argoproj.io/v1alpha1
+kind: ApplicationSet
+metadata:
+  name: pg-admin
+  namespace: argocd
+spec:
+  generators:
+  - list:
+      elements:
+      - stage: dev
+      - stage: qa
+      - stage: prod
+  template:
+    metadata:
+      name: pg-admin-{{stage}}
+      annotations:
+        kargo.akuity.io/authorized-stage: pg-admin:{{stage}}
+    spec:
+      project: default
+      source:
+        repoURL: https://helm.runix.net
+        targetRevision: 1.48.0
+        chart: pgadmin4
+      destination:
+        server: https://kubernetes.default.svc
+        namespace: pg-admin-{{stage}}
+      syncPolicy:
+        syncOptions:
+        - CreateNamespace=true

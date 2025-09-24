@@ -1,0 +1,58 @@
+apiVersion: kargo.akuity.io/v1alpha1
+kind: Stage
+metadata:
+  name: dev
+  namespace: pg-admin
+spec:
+  requestedFreight:
+  - origin:
+      kind: Warehouse
+      name: pgadmin-warehouse
+    sources:
+      direct: true
+  promotionTemplate:
+    spec:
+      steps:
+      - task:
+          name: demo-promo-process
+        as: promo-process
+---
+apiVersion: kargo.akuity.io/v1alpha1
+kind: Stage
+metadata:
+  name: qa
+  namespace: pg-admin
+spec:
+  requestedFreight:
+  - origin:
+      kind: Warehouse
+      name: pgadmin-warehouse
+    sources:
+      stages:
+      - dev
+  promotionTemplate:
+    spec:
+      steps:
+      - task:
+          name: demo-promo-process
+        as: promo-process
+---
+apiVersion: kargo.akuity.io/v1alpha1
+kind: Stage
+metadata:
+  name: prod
+  namespace: pg-admin
+spec:
+  requestedFreight:
+  - origin:
+      kind: Warehouse
+      name: pgadmin-warehouse
+    sources:
+      stages:
+      - qa
+  promotionTemplate:
+    spec:
+      steps:
+      - task:
+          name: demo-promo-process
+        as: promo-process

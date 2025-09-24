@@ -1,0 +1,34 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: pgadmin-helm
+  namespace: argo-ns
+spec:
+  source:
+    helm:
+      parameters:
+        - name: existingSecret
+          value: pg-admin-qa
+        - name: secretKeys.pgadminPasswordKey
+          value: PASSWORD
+        - name: env.email
+          value: pgadmin@qa.com
+        - name: persistentVolume.size
+          value: 2Gi
+      values: |
+        ingress:
+          enabled: true
+          annotations: 
+           nginx.ingress.kubernetes.io/use-regex: "true"
+           nginx.ingress.kubernetes.io/rewrite-target: /pgadmin/$2
+           kubernetes.io/ingress.class: "nginx"
+          hosts:
+            - host: localhost
+              paths:
+                - path: /pgadmin(/|$)(.*)
+                  pathType: ImplementationSpecific
+        env:
+          contextPath: "/pgadmin"        
+          variables:                       
+            - name: SCRIPT_NAME
+              value: "/pgadmin"

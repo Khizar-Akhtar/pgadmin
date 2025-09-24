@@ -1,0 +1,14 @@
+apiVersion: kargo.akuity.io/v1alpha1
+kind: Warehouse
+metadata:
+  name: pgadmin-warehouse
+  namespace: pg-admin
+spec:
+  subscriptions:
+    - chart:
+        repoURL: https://helm.runix.net
+        name: pgadmin4
+        semverConstraint: ">=1.48.0"
+    # - image:
+    #     repoURL: dpage/pgadmin4
+    #     imageSelectionStrategy: SemVer

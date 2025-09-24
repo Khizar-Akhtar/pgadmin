@@ -1,0 +1,9 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: pgadmin-helm
+  namespace: argo-ns
+spec:
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: pg-ns
